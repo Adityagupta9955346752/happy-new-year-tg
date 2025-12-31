@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy New Year My Love ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    height: 100svh;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+
+    background:
+        linear-gradient(rgba(255,95,158,0.6), rgba(255,133,179,0.6)),
+        url("bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* BLUR EFFECT */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(4px);
+    z-index: 0;
+}
+
+/* MAIN CARD */
+.card {
+    background: rgba(255,255,255,0.15);
+    padding: 24px;
+    border-radius: 20px;
+    width: min(92%, 420px);
+    text-align: center;
+    z-index: 5;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+}
+
+h1 {
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+}
+
+#name {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+button {
+    margin-top: 10px;
+    padding: 12px 26px;
+    border-radius: 25px;
+    border: none;
+    background: white;
+    color: #ff4d6d;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+#message {
+    min-height: 70px;
+    margin-top: 15px;
+    font-style: italic;
+    font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+}
+
+/* BIG HEART */
+.big-heart {
+    position: fixed;
+    font-size: min(60vw, 240px);
+    display: none;
+    animation: pulse 1.2s infinite;
+    z-index: 10;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* HEART RAIN */
+.heart {
+    position: fixed;
+    color: rgba(255,255,255,0.85);
+    animation: fall linear forwards;
+    z-index: 1;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+}
+
+/* 🔥 BIG FIREWORK */
+.firework {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: explode 1.2s ease-out forwards;
+    z-index: 9;
+}
+
+@keyframes explode {
+    to {
+        transform: scale(30);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 MUSIC -->
+<audio id="music" loop preload="auto">
+    <source src="love.mp3.mpeg" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1>🎆 Happy New Year My Dear Love Twinkle 🎆</h1>
+
+    <div id="name"></div>
+
+    <button id="btn" onclick="nextMessage()">Click for Surprise 💌</button>
+    <button id="repeatBtn" onclick="repeatAgain()" style="display:none;">
+        🔁 Repeat Again
+    </button>
+
+    <div id="message"></div>
+
+    <div style="margin-top:15px;">
+        <button onclick="toggleMusic()" id="musicBtn">🔊 Music ON</button>
+        <br><br>
+        <input type="range" min="0" max="100" value="60"
+               oninput="setVolume(this.value)" style="width:100%;">
+    </div>
+</div>
+
+<div id="bigHeart" class="big-heart">❤️</div>
+
+<script>
+const herName = "My Love Twinkle";
+
+const messages = [
+     `My dear Love and my life Twinkle, i want to start a new chapter with you in the new year which will never end...❤️`,
+    "You are my favorite chapter in this year of my life 💕",
+    "Thank you for loving me, supporting me, and being my happiness 😘",
+    "No matter what the future brings, I choose YOU 🥰",
+    "This year and forever… it's always you and me 💖"
+];
+
+let index = 0;
+let fireworkTimer = null;
+
+document.getElementById("name").innerText = "For " + herName;
+
+function nextMessage() {
+    const music = document.getElementById("music");
+    if (music.paused) {
+        music.volume = 0.6;
+        music.play().catch(()=>{});
+    }
+
+    if (index < messages.length) {
+        document.getElementById("message").innerText = messages[index++];
+        if (index === messages.length) {
+            document.getElementById("btn").innerText = "I Love You ❤️";
+        }
+    } else {
+        finishMoment();
+    }
+}
+
+function finishMoment() {
+    document.getElementById("btn").style.display = "none";
+    document.getElementById("bigHeart").style.display = "block";
+    startFireworks();
+
+    setTimeout(() => {
+        document.getElementById("bigHeart").style.display = "none";
+        document.getElementById("repeatBtn").style.display = "inline-block";
+    }, 5000);
+}
+
+function repeatAgain() {
+    index = 0;
+    document.getElementById("message").innerText = "";
+    document.getElementById("btn").style.display = "inline-block";
+    document.getElementById("btn").innerText = "Click for Surprise 💌";
+    document.getElementById("repeatBtn").style.display = "none";
+
+    if (fireworkTimer) {
+        clearInterval(fireworkTimer);
+        fireworkTimer = null;
+    }
+
+    const music = document.getElementById("music");
+    music.currentTime = 0;
+    music.play().catch(()=>{});
+}
+
+function toggleMusic() {
+    const music = document.getElementById("music");
+    const btn = document.getElementById("musicBtn");
+
+    if (music.paused) {
+        music.play().catch(()=>{});
+        btn.innerText = "🔊 Music ON";
+    } else {
+        music.pause();
+        btn.innerText = "🔇 Music OFF";
+    }
+}
+
+function setVolume(v) {
+    document.getElementById("music").volume = v / 100;
+}
+
+/* ❤️ HEART RAIN */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 24 + 16 + "px";
+    heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+}, 300);
+
+/* 🎆 BIG COLORFUL FIREWORKS */
+function startFireworks() {
+    if (fireworkTimer) return;
+
+    fireworkTimer = setInterval(() => {
+        const fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.left = Math.random() * 100 + "vw";
+        fw.style.top = Math.random() * 70 + "vh";
+        fw.style.background = `hsl(${Math.random()*360},100%,70%)`;
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1200);
+    }, 120);
+}
+</script>
+
+</body>
+</html>
